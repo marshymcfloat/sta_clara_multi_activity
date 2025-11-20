@@ -13,6 +13,10 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Separator } from "@radix-ui/react-select";
+import { useMutation } from "@tanstack/react-query";
+import { authLoginAction } from "@/lib/actions/authActions";
+import { toast } from "sonner";
+import { LoaderCircle, LogIn } from "lucide-react";
 
 export default function AuthLoginForm({
   setContent,
@@ -29,9 +33,27 @@ export default function AuthLoginForm({
 
   const formInputs = Object.keys(form.getValues()) as (keyof AuthLoginTypes)[];
 
+  const { mutate: login, isPending } = useMutation({
+    mutationFn: authLoginAction,
+    onSuccess: (data) => {
+      if (!data.success) {
+        toast.error(data.error || "An unexpected error occurred");
+        return;
+      }
+      toast.success(data.message || "Login successful");
+    },
+  });
+
+  function handleSubmission(types: AuthLoginTypes) {
+    login(types);
+  }
   return (
     <Form {...form}>
-      <form action="" className="space-y-4 ">
+      <form
+        action=""
+        onSubmit={form.handleSubmit(handleSubmission)}
+        className="space-y-4 "
+      >
         {formInputs.map((input) => (
           <FormField
             key={input}
@@ -55,7 +77,8 @@ export default function AuthLoginForm({
           />
         ))}
         <div className="flex flex-col gap-4 mt-12">
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full" disabled={isPending}>
+            {isPending ? <LoaderCircle className="animate-spin" /> : <LogIn />}
             Login
           </Button>
           <p className="text-center text-sm">
