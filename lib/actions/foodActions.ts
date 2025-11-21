@@ -3,13 +3,13 @@
 import { cookies } from "next/headers";
 import { createClient } from "../supabase/server";
 import {
-  uploadPhotoServerSchema,
-  updateUploadPhotoServerSchema,
-} from "../zod schemas/photoSchema";
+  uploadFoodServerSchema,
+  updateUploadFoodServerSchema,
+} from "../zod schemas/foodSchema";
 
 import { put, del } from "@vercel/blob";
 
-export async function uploadPhotoAction(formData: FormData) {
+export async function uploadFoodAction(formData: FormData) {
   try {
     const supabase = await createClient(cookies());
 
@@ -32,7 +32,7 @@ export async function uploadPhotoAction(formData: FormData) {
       file,
     };
 
-    const validationResult = uploadPhotoServerSchema.safeParse(dataObject);
+    const validationResult = uploadFoodServerSchema.safeParse(dataObject);
 
     if (!validationResult.success) {
       return {
@@ -51,22 +51,22 @@ export async function uploadPhotoAction(formData: FormData) {
     if (!pathname || !url) {
       return {
         success: false,
-        error: "Failed to upload photo",
+        error: "Failed to upload food photo",
       };
     }
 
-    const { data: photoData, error: photoError } = await supabase
-      .from("Photo")
+    const { data: foodData, error: foodError } = await supabase
+      .from("Food")
       .insert({ name: fileName, url, uploaded_by: user.id });
 
-    if (photoError) {
+    if (foodError) {
       return {
         success: false,
-        error: photoError.message || "Failed to upload photo",
+        error: foodError.message || "Failed to upload food photo",
       };
     }
 
-    return { success: true, message: "Photo uploaded successfully" };
+    return { success: true, message: "Food photo uploaded successfully" };
   } catch (err) {
     return {
       success: false,
@@ -75,7 +75,7 @@ export async function uploadPhotoAction(formData: FormData) {
   }
 }
 
-export async function updatePhotoAction(photoId: number, formData: FormData) {
+export async function updateFoodAction(foodId: number, formData: FormData) {
   try {
     const supabase = await createClient(cookies());
 
@@ -90,23 +90,24 @@ export async function updatePhotoAction(photoId: number, formData: FormData) {
       };
     }
 
-    const { data: existingPhoto, error: fetchError } = await supabase
-      .from("Photo")
+    // Get existing food to check ownership
+    const { data: existingFood, error: fetchError } = await supabase
+      .from("Food")
       .select("uploaded_by, url")
-      .eq("id", photoId)
+      .eq("id", foodId)
       .single();
 
-    if (fetchError || !existingPhoto) {
+    if (fetchError || !existingFood) {
       return {
         success: false,
-        error: "Photo not found",
+        error: "Food not found",
       };
     }
 
-    if (existingPhoto.uploaded_by !== user.id) {
+    if (existingFood.uploaded_by !== user.id) {
       return {
         success: false,
-        error: "Unauthorized - You can only update your own photos",
+        error: "Unauthorized - You can only update your own food photos",
       };
     }
 
@@ -117,8 +118,7 @@ export async function updatePhotoAction(photoId: number, formData: FormData) {
     if (title) dataObject.title = title;
     if (file instanceof File && file.size > 0) dataObject.file = file;
 
-    const validationResult =
-      updateUploadPhotoServerSchema.safeParse(dataObject);
+    const validationResult = updateUploadFoodServerSchema.safeParse(dataObject);
 
     if (!validationResult.success) {
       return {
@@ -128,11 +128,11 @@ export async function updatePhotoAction(photoId: number, formData: FormData) {
     }
 
     const validatedData = validationResult.data;
-    let newUrl = existingPhoto.url;
-    let newName = existingPhoto.url;
+    let newUrl = existingFood.url;
+    let newName = existingFood.url;
 
     if (validatedData.file) {
-      const fileName = `${validatedData.title || "photo"}-${
+      const fileName = `${validatedData.title || "food"}-${
         user.id
       }-${Date.now()}`;
       const { pathname, url } = await put(fileName, validatedData.file, {
@@ -142,12 +142,12 @@ export async function updatePhotoAction(photoId: number, formData: FormData) {
       if (!pathname || !url) {
         return {
           success: false,
-          error: "Failed to upload new photo",
+          error: "Failed to upload new food photo",
         };
       }
 
       try {
-        await del(existingPhoto.url);
+        await del(existingFood.url!);
       } catch (delError) {
         console.error("Error deleting old file:", delError);
       }
@@ -160,7 +160,7 @@ export async function updatePhotoAction(photoId: number, formData: FormData) {
     if (validatedData.title) {
       updateData.name = validatedData.title;
     }
-    if (newUrl !== existingPhoto.url) {
+    if (newUrl !== existingFood.url) {
       updateData.url = newUrl;
       if (validatedData.title) {
         updateData.name = validatedData.title;
@@ -171,19 +171,19 @@ export async function updatePhotoAction(photoId: number, formData: FormData) {
 
     if (Object.keys(updateData).length > 0) {
       const { error: updateError } = await supabase
-        .from("Photo")
+        .from("Food")
         .update(updateData)
-        .eq("id", photoId);
+        .eq("id", foodId);
 
       if (updateError) {
         return {
           success: false,
-          error: updateError.message || "Failed to update photo",
+          error: updateError.message || "Failed to update food photo",
         };
       }
     }
 
-    return { success: true, message: "Photo updated successfully" };
+    return { success: true, message: "Food photo updated successfully" };
   } catch (err) {
     return {
       success: false,
@@ -192,7 +192,7 @@ export async function updatePhotoAction(photoId: number, formData: FormData) {
   }
 }
 
-export async function deletePhotoAction(photoId: number) {
+export async function deleteFoodAction(foodId: number) {
   try {
     const supabase = await createClient(cookies());
 
@@ -207,45 +207,45 @@ export async function deletePhotoAction(photoId: number) {
       };
     }
 
-    const { data: existingPhoto, error: fetchError } = await supabase
-      .from("Photo")
+    const { data: existingFood, error: fetchError } = await supabase
+      .from("Food")
       .select("uploaded_by, url")
-      .eq("id", photoId)
+      .eq("id", foodId)
       .single();
 
-    if (fetchError || !existingPhoto) {
+    if (fetchError || !existingFood) {
       return {
         success: false,
-        error: "Photo not found",
+        error: "Food not found",
       };
     }
 
-    if (existingPhoto.uploaded_by !== user.id) {
+    if (existingFood.uploaded_by !== user.id) {
       return {
         success: false,
-        error: "Unauthorized - You can only delete your own photos",
+        error: "Unauthorized - You can only delete your own food photos",
       };
     }
 
     try {
-      await del(existingPhoto.url);
+      await del(existingFood.url!);
     } catch (delError) {
       console.error("Error deleting file from blob:", delError);
     }
 
     const { error: deleteError } = await supabase
-      .from("Photo")
+      .from("Food")
       .delete()
-      .eq("id", photoId);
+      .eq("id", foodId);
 
     if (deleteError) {
       return {
         success: false,
-        error: deleteError.message || "Failed to delete photo",
+        error: deleteError.message || "Failed to delete food photo",
       };
     }
 
-    return { success: true, message: "Photo deleted successfully" };
+    return { success: true, message: "Food photo deleted successfully" };
   } catch (err) {
     return {
       success: false,
