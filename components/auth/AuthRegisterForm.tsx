@@ -46,9 +46,12 @@ export default function AuthRegisterForm({
         toast.error(data.error || "An unexpected error occurred");
         return;
       }
-      toast.success(data.message || "Account created successfully");
+      toast.success(data.message || "Account verification sent to your email");
       setContent("LOGIN");
       form.reset();
+    },
+    onError: (error) => {
+      toast.error(error.message || "An unexpected error occurred");
     },
   });
 

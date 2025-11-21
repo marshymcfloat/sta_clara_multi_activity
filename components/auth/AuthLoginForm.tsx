@@ -12,17 +12,19 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Separator } from "@radix-ui/react-select";
 import { useMutation } from "@tanstack/react-query";
 import { authLoginAction } from "@/lib/actions/authActions";
 import { toast } from "sonner";
 import { LoaderCircle, LogIn } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function AuthLoginForm({
   setContent,
 }: {
   setContent: (content: "LOGIN" | "REGISTER") => void;
 }) {
+  const router = useRouter();
+
   const form = useForm<AuthLoginTypes>({
     resolver: zodResolver(authLoginSchema),
     defaultValues: {
@@ -41,6 +43,7 @@ export default function AuthLoginForm({
         return;
       }
       toast.success(data.message || "Login successful");
+      router.push(`/${data.data}/to-do`);
     },
   });
 
