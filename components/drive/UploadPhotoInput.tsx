@@ -15,11 +15,13 @@ import Image from "next/image";
 interface UploadPhotoInputProps {
   value?: File;
   onChange?: (file: File | undefined) => void;
+  existingImageUrl?: string;
 }
 
 export default function UploadPhotoInput({
   value,
   onChange,
+  existingImageUrl,
 }: UploadPhotoInputProps) {
   const [tempUrl, setTempUrl] = useState<string | null>(null);
   const hiddenInputRef = useRef<HTMLInputElement>(null);
@@ -80,7 +82,7 @@ export default function UploadPhotoInput({
         onChange={handleFileChange}
       />
 
-      {value && tempUrl ? (
+      {(value && tempUrl) || existingImageUrl ? (
         <div className="space-y-3">
           <div className="relative group rounded-lg border-2 border-border overflow-hidden bg-muted/30">
             <div
@@ -88,8 +90,8 @@ export default function UploadPhotoInput({
               onClick={() => hiddenInputRef.current?.click()}
             >
               <Image
-                src={tempUrl}
-                alt={value.name}
+                src={tempUrl || existingImageUrl || ""}
+                alt={value?.name || "Photo"}
                 fill
                 className="object-contain"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -119,15 +121,17 @@ export default function UploadPhotoInput({
               <X className="w-4 h-4" />
             </Button>
           </div>
-          <div className="flex items-center gap-3 p-3 rounded-lg border bg-card">
-            <ImageIcon className="w-5 h-5 text-muted-foreground" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{value.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {formatFileSize(value.size)}
-              </p>
+          {value && (
+            <div className="flex items-center gap-3 p-3 rounded-lg border bg-card">
+              <ImageIcon className="w-5 h-5 text-muted-foreground" />
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{value.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {formatFileSize(value.size)}
+                </p>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       ) : (
         <div

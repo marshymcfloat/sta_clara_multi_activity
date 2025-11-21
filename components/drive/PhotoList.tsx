@@ -1,5 +1,14 @@
-import React from "react";
+import PhotoCard from "./PhotoCard";
+import { Tables } from "@/types/supabase";
 
-export default function PhotoList() {
-  return <div>PhotoList</div>;
+type Photo = Tables<"Photo">;
+
+export default function PhotoList({ photos }: { photos: Photo[] }) {
+  return (
+    <div className="grid grid-cols-5 gap-4">
+      {photos.map((photo) => (
+        <PhotoCard key={photo.id} photo={photo} />
+      ))}
+    </div>
+  );
 }
