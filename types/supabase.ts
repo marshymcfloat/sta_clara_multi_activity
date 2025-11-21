@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      Food: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+          uploaded_by: string | null
+          url: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          name: string
+          uploaded_by?: string | null
+          url?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          name?: string
+          uploaded_by?: string | null
+          url?: string | null
+        }
+        Relationships: []
+      }
       Photo: {
         Row: {
           created_at: string
@@ -55,6 +79,41 @@ export type Database = {
           id?: string
         }
         Relationships: []
+      }
+      Review: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          food_id: number
+          id: number
+          rating: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          food_id: number
+          id?: number
+          rating?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          food_id?: number
+          id?: number
+          rating?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "Review_food_id_fkey"
+            columns: ["food_id"]
+            isOneToOne: false
+            referencedRelation: "Food"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       Task: {
         Row: {
