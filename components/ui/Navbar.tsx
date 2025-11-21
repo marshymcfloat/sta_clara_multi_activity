@@ -12,7 +12,7 @@ export default function Navbar({ userId }: { userId: string }) {
     { label: "Drive", href: `/${userId}/drive` },
     { label: "Food", href: `/${userId}/food` },
     { label: "Pokemon", href: `/${userId}/pokemon` },
-    { label: "Markdown", href: `/${userId}/markdown` },
+    { label: "Markdown", href: `/${userId}/notes` },
   ];
 
   return (

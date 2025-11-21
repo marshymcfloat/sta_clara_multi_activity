@@ -38,6 +38,30 @@ export type Database = {
         }
         Relationships: []
       }
+      Note: {
+        Row: {
+          content: string | null
+          created_at: string
+          created_by: string | null
+          id: number
+          title: string
+        }
+        Insert: {
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: number
+          title: string
+        }
+        Update: {
+          content?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: number
+          title?: string
+        }
+        Relationships: []
+      }
       Photo: {
         Row: {
           created_at: string
