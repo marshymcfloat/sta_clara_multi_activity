@@ -90,7 +90,6 @@ export async function updatePhotoAction(photoId: number, formData: FormData) {
       };
     }
 
-    // Get existing photo to check ownership
     const { data: existingPhoto, error: fetchError } = await supabase
       .from("Photo")
       .select("uploaded_by, url")
@@ -132,7 +131,6 @@ export async function updatePhotoAction(photoId: number, formData: FormData) {
     let newUrl = existingPhoto.url;
     let newName = existingPhoto.url;
 
-    // If file is being updated, upload new file and delete old one
     if (validatedData.file) {
       const fileName = `${validatedData.title || "photo"}-${
         user.id
@@ -148,19 +146,16 @@ export async function updatePhotoAction(photoId: number, formData: FormData) {
         };
       }
 
-      // Delete old file from Vercel Blob
       try {
         await del(existingPhoto.url);
       } catch (delError) {
         console.error("Error deleting old file:", delError);
-        // Continue with upload even if old file deletion fails
       }
 
       newUrl = url;
       newName = fileName;
     }
 
-    // Update photo in database
     const updateData: Record<string, unknown> = {};
     if (validatedData.title) {
       updateData.name = validatedData.title;
@@ -212,7 +207,6 @@ export async function deletePhotoAction(photoId: number) {
       };
     }
 
-    // Get existing photo to check ownership and get URL
     const { data: existingPhoto, error: fetchError } = await supabase
       .from("Photo")
       .select("uploaded_by, url")
@@ -233,15 +227,12 @@ export async function deletePhotoAction(photoId: number) {
       };
     }
 
-    // Delete from Vercel Blob
     try {
       await del(existingPhoto.url);
     } catch (delError) {
       console.error("Error deleting file from blob:", delError);
-      // Continue with database deletion even if blob deletion fails
     }
 
-    // Delete from database
     const { error: deleteError } = await supabase
       .from("Photo")
       .delete()
