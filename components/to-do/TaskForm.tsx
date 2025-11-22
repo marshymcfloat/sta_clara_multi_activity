@@ -17,7 +17,7 @@ import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { createTaskAction, updateTaskAction } from "@/lib/actions/taskActionts";
+import { createTaskAction, updateTaskAction } from "@/lib/actions/taskActions";
 import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";

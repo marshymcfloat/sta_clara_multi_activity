@@ -17,7 +17,7 @@ import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useMutation } from "@tanstack/react-query";
-import { createNoteAction, updateNoteAction } from "@/lib/actions/noteActionts";
+import { createNoteAction, updateNoteAction } from "@/lib/actions/noteActions";
 import { LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -138,4 +138,3 @@ export default function NoteForm({
     </Form>
   );
 }
-

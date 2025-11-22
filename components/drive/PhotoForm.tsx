@@ -24,7 +24,7 @@ import { useMutation } from "@tanstack/react-query";
 import {
   uploadPhotoAction,
   updatePhotoAction,
-} from "@/lib/actions/photoActionts";
+} from "@/lib/actions/photoActions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { LoaderCircle } from "lucide-react";

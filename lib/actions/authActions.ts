@@ -81,7 +81,7 @@ export async function authLoginAction(types: AuthLoginTypes) {
   } catch (err) {
     console.error(err);
     return {
-      sucess: false,
+      success: false,
       error: "An unexpected error occurred",
     };
   }

@@ -21,7 +21,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useMutation } from "@tanstack/react-query";
-import { deleteTaskAction } from "@/lib/actions/taskActionts";
+import { deleteTaskAction } from "@/lib/actions/taskActions";
 import { toast } from "sonner";
 import { queryClient } from "../providers/TanstackProvider";
 import { useRouter } from "next/navigation";

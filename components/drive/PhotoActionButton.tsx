@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
 import EditPhotoDialog from "./EditPhotoDialog";
-import { deletePhotoAction } from "@/lib/actions/photoActionts";
+import { deletePhotoAction } from "@/lib/actions/photoActions";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
