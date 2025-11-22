@@ -60,7 +60,7 @@ export default function FoodCard({
           </div>
         </CardHeader>
         <CardContent className="p-2.5 space-y-1 relative">
-          {food.created_by === currentUserId && (
+          {food.uploaded_by === currentUserId && (
             <FoodActionButton
               food={food}
               onEditDialogChange={setEditDialogOpen}

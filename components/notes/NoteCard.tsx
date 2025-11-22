@@ -20,7 +20,7 @@ export default function NoteCard({ note }: { note: Tables<"Note"> }) {
   return (
     <>
       <Card
-        className="capitalize w-fit min-w-[300px] relative cursor-pointer hover:shadow-md transition-shadow"
+        className="capitalize w-full sm:w-fit sm:min-w-[300px] relative cursor-pointer hover:shadow-md transition-shadow"
         onClick={() => setIsDetailDialogOpen(true)}
       >
         <CardAction>

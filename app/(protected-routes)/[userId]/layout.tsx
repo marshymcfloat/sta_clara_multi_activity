@@ -10,7 +10,7 @@ export default async function layout({
 }) {
   const { userId } = await params;
   return (
-    <main className="min-h-screen w-screen flex flex-col gap-2">
+    <main className="min-h-screen w-full max-w-screen overflow-x-hidden flex flex-col gap-2">
       <Navbar userId={userId} />
       {children}
     </main>

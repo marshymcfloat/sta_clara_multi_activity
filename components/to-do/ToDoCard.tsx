@@ -15,7 +15,7 @@ import { useState } from "react";
 export default function ToDoCard({ task }: { task: Tables<"Task"> }) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   return (
-    <Card className="capitalize w-fit min-w-[300px] relative">
+    <Card className="capitalize w-full sm:w-fit sm:min-w-[300px] relative">
       <CardAction>
         <ToDoCardAction
           task={task}

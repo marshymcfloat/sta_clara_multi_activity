@@ -37,7 +37,7 @@ export default function FoodSearchSort({
       <div className="flex items-center gap-2">
         <ArrowUpDown className="w-4 h-4 text-muted-foreground" />
         <Select value={sortBy} onValueChange={onSortChange}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Sort by..." />
           </SelectTrigger>
           <SelectContent>

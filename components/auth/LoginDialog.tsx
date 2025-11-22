@@ -18,10 +18,10 @@ export default function LoginDialog() {
 
   return (
     <Dialog>
-      <DialogTrigger asChild className="absolute top-4 right-4">
+      <DialogTrigger asChild className="absolute top-2 right-2 sm:top-4 sm:right-4">
         <Button
           variant="outline"
-          className="font-medium text-sm bg-white/70 hover:bg-white/90 cursor-pointer"
+          className="font-medium text-xs sm:text-sm bg-white/70 hover:bg-white/90 cursor-pointer"
         >
           Get Started
         </Button>

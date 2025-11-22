@@ -5,7 +5,7 @@ import React, { Suspense } from "react";
 
 export default async function NotesPage() {
   return (
-    <div className=" flex-1 p-4">
+    <div className="flex-1 p-2 sm:p-4">
       <AddNoteButton />
       <Suspense fallback={<NoteListSkeleton />}>
         <NotesDataContainer />
