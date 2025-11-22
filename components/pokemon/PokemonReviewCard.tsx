@@ -9,8 +9,8 @@ import {
 } from "../ui/card";
 import { Button } from "../ui/button";
 import { useState } from "react";
-import EditReviewDialog from "./EditReviewDialog";
-import { deleteReviewAction } from "@/lib/actions/reviewActions";
+import EditPokemonReviewDialog from "./EditPokemonReviewDialog";
+import { deletePokemonReviewAction } from "@/lib/actions/pokemonReviewActions";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -26,9 +26,9 @@ import {
 } from "../ui/alert-dialog";
 import { Tables } from "@/types/supabase";
 
-type Review = Tables<"Review">;
+type Review = Tables<"PokemonReview">;
 
-export default function ReviewCard({
+export default function PokemonReviewCard({
   review,
   currentUserId,
 }: {
@@ -40,13 +40,13 @@ export default function ReviewCard({
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const { mutate: deleteReview, isPending: isDeleting } = useMutation({
-    mutationFn: deleteReviewAction,
+    mutationFn: deletePokemonReviewAction,
     onSuccess: (data) => {
       if (!data.success) {
         toast.error(data.error || "Failed to delete review");
         return;
       }
-      toast.success(data.message || "Review deleted successfully");
+      toast.success("Review deleted successfully");
       router.refresh();
       setDeleteDialogOpen(false);
     },
@@ -111,8 +111,8 @@ export default function ReviewCard({
         </CardContent>
       </Card>
 
-      <EditReviewDialog
-        foodId={review.food_id}
+      <EditPokemonReviewDialog
+        pokemonId={review.pokemon_id}
         review={review}
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}

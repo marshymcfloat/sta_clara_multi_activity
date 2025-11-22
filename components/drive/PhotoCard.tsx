@@ -13,7 +13,25 @@ import { Tables } from "@/types/supabase";
 
 type Photo = Tables<"Photo">;
 
-export default function PhotoCard({ photo }: { photo: Photo }) {
+export default function PhotoCard({
+  photo,
+  currentUserId,
+}: {
+  photo: Photo;
+  currentUserId: string;
+}) {
+  const cleanName =
+    photo.name
+      .split("-")
+      .filter(
+        (part) => !part.match(/^[0-9]+$/) && !part.match(/^[a-f0-9-]{36}$/i)
+      )
+      .join(" ")
+      .trim() || photo.name;
+
+  const displayName =
+    cleanName.length > 20 ? cleanName.substring(0, 20) + "..." : cleanName;
+
   return (
     <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-[1.02] cursor-pointer py-0">
       <CardHeader className="p-0">
@@ -29,9 +47,14 @@ export default function PhotoCard({ photo }: { photo: Photo }) {
         </div>
       </CardHeader>
       <CardContent className="p-2.5 space-y-1 relative">
-        <PhotoActionButton photo={photo} />
-        <CardTitle className="text-sm font-medium line-clamp-1 group-hover:text-primary transition-colors">
-          {photo.name}
+        {photo.uploaded_by === currentUserId && (
+          <PhotoActionButton photo={photo} />
+        )}
+        <CardTitle
+          className="text-sm font-medium line-clamp-1 group-hover:text-primary transition-colors truncate"
+          title={cleanName}
+        >
+          {displayName}
         </CardTitle>
         <CardDescription className="text-[10px] text-muted-foreground">
           {new Date(photo.created_at).toLocaleDateString("en-US", {

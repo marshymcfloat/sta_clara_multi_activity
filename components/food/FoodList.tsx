@@ -7,9 +7,11 @@ type Review = Tables<"Review">;
 export default function FoodList({
   foods,
   reviewsByFoodId,
+  currentUserId,
 }: {
   foods: Food[];
   reviewsByFoodId: Record<number, Review[]>;
+  currentUserId: string;
 }) {
   return (
     <div className="grid grid-cols-5 gap-4">
@@ -18,6 +20,7 @@ export default function FoodList({
           key={food.id}
           food={food}
           reviews={reviewsByFoodId[food.id] || []}
+          currentUserId={currentUserId}
         />
       ))}
     </div>

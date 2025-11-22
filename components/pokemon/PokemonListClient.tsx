@@ -1,42 +1,42 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import FoodList from "./FoodList";
-import FoodSearchSort from "./FoodSearchSort";
+import PokemonList from "./PokemonList";
+import PokemonSearchSort from "./PokemonSearchSort";
 import { Tables } from "@/types/supabase";
 
-type Food = Tables<"Food">;
-type Review = Tables<"Review">;
+type Pokemon = Tables<"Pokemon">;
+type Review = Tables<"PokemonReview">;
 type SortOption = "name-asc" | "name-desc" | "date-asc" | "date-desc";
 
-export default function FoodListClient({
-  foods: initialFoods,
-  reviewsByFoodId,
+export default function PokemonListClient({
+  pokemons: initialPokemons,
+  reviewsByPokemonId,
   currentUserId,
 }: {
-  foods: Food[];
-  reviewsByFoodId: Record<number, Review[]>;
+  pokemons: Pokemon[];
+  reviewsByPokemonId: Record<number, Review[]>;
   currentUserId: string;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("date-desc");
 
-  const filteredAndSortedFoods = useMemo(() => {
-    let filtered = initialFoods;
+  const filteredAndSortedPokemons = useMemo(() => {
+    let filtered = initialPokemons;
 
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter((food) =>
-        food.name.toLowerCase().includes(query)
+      filtered = filtered.filter((pokemon) =>
+        pokemon.pokemon_name.toLowerCase().includes(query)
       );
     }
 
     const sorted = [...filtered].sort((a, b) => {
       switch (sortBy) {
         case "name-asc":
-          return a.name.localeCompare(b.name);
+          return a.pokemon_name.localeCompare(b.pokemon_name);
         case "name-desc":
-          return b.name.localeCompare(a.name);
+          return b.pokemon_name.localeCompare(a.pokemon_name);
         case "date-asc":
           return (
             new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
@@ -51,19 +51,19 @@ export default function FoodListClient({
     });
 
     return sorted;
-  }, [initialFoods, searchQuery, sortBy]);
+  }, [initialPokemons, searchQuery, sortBy]);
 
   return (
     <div>
-      <FoodSearchSort
+      <PokemonSearchSort
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         sortBy={sortBy}
         onSortChange={setSortBy}
       />
-      <FoodList
-        foods={filteredAndSortedFoods}
-        reviewsByFoodId={reviewsByFoodId}
+      <PokemonList
+        pokemons={filteredAndSortedPokemons}
+        reviewsByPokemonId={reviewsByPokemonId}
         currentUserId={currentUserId}
       />
     </div>

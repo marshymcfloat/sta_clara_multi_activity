@@ -1,12 +1,13 @@
 import AddTodoButton from "@/components/to-do/AddTodoButton";
 import ToDoListDataContainer from "@/components/to-do/ToDoListDataContainer";
+import ToDoListSkeleton from "@/components/to-do/ToDoListSkeleton";
 import React, { Suspense } from "react";
 
 export default async function TodoPage() {
   return (
     <div className=" flex-1 p-4">
       <AddTodoButton />
-      <Suspense fallback={<h1>Loading...</h1>}>
+      <Suspense fallback={<ToDoListSkeleton />}>
         <ToDoListDataContainer />
       </Suspense>
     </div>

@@ -10,8 +10,10 @@ type SortOption = "name-asc" | "name-desc" | "date-asc" | "date-desc";
 
 export default function PhotoListClient({
   photos: initialPhotos,
+  currentUserId,
 }: {
   photos: Photo[];
+  currentUserId: string;
 }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("date-desc");
@@ -54,7 +56,7 @@ export default function PhotoListClient({
         sortBy={sortBy}
         onSortChange={setSortBy}
       />
-      <PhotoList photos={filteredAndSortedPhotos} />
+      <PhotoList photos={filteredAndSortedPhotos} currentUserId={currentUserId} />
     </div>
   );
 }

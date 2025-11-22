@@ -31,5 +31,5 @@ export default async function PhotosDataContainer() {
     );
   }
 
-  return <PhotoListClient photos={photos || []} />;
+  return <PhotoListClient photos={photos || []} currentUserId={user.id} />;
 }

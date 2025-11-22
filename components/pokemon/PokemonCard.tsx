@@ -9,19 +9,19 @@ import {
   CardTitle,
 } from "../ui/card";
 import Image from "next/image";
-import FoodActionButton from "./FoodActionButton";
-import FoodDetailDialog from "./FoodDetailDialog";
+import PokemonActionButton from "./PokemonActionButton";
+import PokemonDetailDialog from "./PokemonDetailDialog";
 import { Tables } from "@/types/supabase";
 
-type Food = Tables<"Food">;
-type Review = Tables<"Review">;
+type Pokemon = Tables<"Pokemon">;
+type Review = Tables<"PokemonReview">;
 
-export default function FoodCard({
-  food,
+export default function PokemonCard({
+  pokemon,
   reviews = [],
   currentUserId,
 }: {
-  food: Food;
+  pokemon: Pokemon;
   reviews?: Review[];
   currentUserId: string;
 }) {
@@ -48,10 +48,10 @@ export default function FoodCard({
         }}
       >
         <CardHeader className="p-0">
-          <div className="relative w-full aspect-square overflow-hidden bg-muted ">
+          <div className="relative w-full aspect-square overflow-hidden bg-muted">
             <Image
-              src={food.url!}
-              alt={food.name}
+              src={pokemon.pokemon_image_url}
+              alt={pokemon.pokemon_name}
               fill
               className="object-cover transition-transform duration-300 group-hover:scale-110"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 20vw"
@@ -60,17 +60,17 @@ export default function FoodCard({
           </div>
         </CardHeader>
         <CardContent className="p-2.5 space-y-1 relative">
-          {food.created_by === currentUserId && (
-            <FoodActionButton
-              food={food}
+          {pokemon.created_by === currentUserId && (
+            <PokemonActionButton
+              pokemon={pokemon}
               onEditDialogChange={setEditDialogOpen}
             />
           )}
-          <CardTitle className="text-sm font-medium line-clamp-1 group-hover:text-primary transition-colors">
-            {food.name}
+          <CardTitle className="text-sm font-medium line-clamp-1 group-hover:text-primary transition-colors capitalize">
+            {pokemon.pokemon_name}
           </CardTitle>
           <CardDescription className="text-[10px] text-muted-foreground">
-            {new Date(food.created_at).toLocaleDateString("en-US", {
+            {new Date(pokemon.created_at).toLocaleDateString("en-US", {
               year: "numeric",
               month: "short",
               day: "numeric",
@@ -84,8 +84,8 @@ export default function FoodCard({
         </CardContent>
       </Card>
 
-      <FoodDetailDialog
-        food={food}
+      <PokemonDetailDialog
+        pokemon={pokemon}
         reviews={reviews}
         open={detailDialogOpen}
         onOpenChange={setDetailDialogOpen}
@@ -94,3 +94,4 @@ export default function FoodCard({
     </>
   );
 }
+

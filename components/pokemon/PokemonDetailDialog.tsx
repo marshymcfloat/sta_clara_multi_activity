@@ -3,22 +3,22 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import Image from "next/image";
 import { Tables } from "@/types/supabase";
-import ReviewCard from "./ReviewCard";
-import AddReviewDialog from "./AddReviewDialog";
+import PokemonReviewCard from "./PokemonReviewCard";
+import AddPokemonReviewDialog from "./AddPokemonReviewDialog";
 import { useRouter } from "next/navigation";
 import { Calendar } from "lucide-react";
 
-type Food = Tables<"Food">;
-type Review = Tables<"Review">;
+type Pokemon = Tables<"Pokemon">;
+type Review = Tables<"PokemonReview">;
 
-export default function FoodDetailDialog({
-  food,
+export default function PokemonDetailDialog({
+  pokemon,
   reviews,
   open,
   onOpenChange,
   currentUserId,
 }: {
-  food: Food | null;
+  pokemon: Pokemon | null;
   reviews: Review[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -26,16 +26,7 @@ export default function FoodDetailDialog({
 }) {
   const router = useRouter();
 
-  if (!food) return null;
-
-  const cleanName =
-    food.name
-      .split("-")
-      .filter(
-        (part) => !part.match(/^[0-9]+$/) && !part.match(/^[a-f0-9-]{36}$/i)
-      )
-      .join(" ")
-      .trim() || food.name;
+  if (!pokemon) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -43,8 +34,8 @@ export default function FoodDetailDialog({
         <div className="relative">
           <div className="relative w-full h-64 md:h-80 overflow-hidden">
             <Image
-              src={food.url!}
-              alt={food.name}
+              src={pokemon.pokemon_image_url}
+              alt={pokemon.pokemon_name}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
@@ -55,14 +46,14 @@ export default function FoodDetailDialog({
           <div className="p-6 space-y-6">
             <div className="space-y-2">
               <DialogHeader className="px-0">
-                <DialogTitle className="text-2xl font-bold">
-                  {cleanName}
+                <DialogTitle className="text-2xl font-bold capitalize">
+                  {pokemon.pokemon_name}
                 </DialogTitle>
               </DialogHeader>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Calendar className="w-4 h-4" />
                 <span>
-                  {new Date(food.created_at).toLocaleDateString("en-US", {
+                  {new Date(pokemon.created_at).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -79,8 +70,8 @@ export default function FoodDetailDialog({
                     {reviews.length} review{reviews.length !== 1 ? "s" : ""}
                   </p>
                 </div>
-                <AddReviewDialog
-                  foodId={food.id}
+                <AddPokemonReviewDialog
+                  pokemonId={pokemon.id}
                   onSuccess={() => router.refresh()}
                 />
               </div>
@@ -92,12 +83,12 @@ export default function FoodDetailDialog({
                       No reviews yet
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      Be the first to review this food!
+                      Be the first to review this Pokemon!
                     </p>
                   </div>
                 ) : (
                   reviews.map((review) => (
-                    <ReviewCard
+                    <PokemonReviewCard
                       key={review.id}
                       review={review}
                       currentUserId={currentUserId}
@@ -112,3 +103,4 @@ export default function FoodDetailDialog({
     </Dialog>
   );
 }
+

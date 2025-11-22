@@ -9,8 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useState } from "react";
-import EditPhotoDialog from "./EditPhotoDialog";
-import { deletePhotoAction } from "@/lib/actions/photoActionts";
+import EditPokemonDialog from "./EditPokemonDialog";
+import { deletePokemonAction } from "@/lib/actions/pokemonActions";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -26,31 +26,42 @@ import {
 } from "../ui/alert-dialog";
 import { Tables } from "@/types/supabase";
 
-type Photo = Tables<"Photo">;
+type Pokemon = Tables<"Pokemon">;
 
-export default function PhotoActionButton({ photo }: { photo: Photo }) {
+export default function PokemonActionButton({
+  pokemon,
+  onEditDialogChange,
+}: {
+  pokemon: Pokemon;
+  onEditDialogChange?: (open: boolean) => void;
+}) {
   const router = useRouter();
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  const { mutate: deletePhoto, isPending: isDeleting } = useMutation({
-    mutationFn: deletePhotoAction,
+  const handleEditDialogChange = (open: boolean) => {
+    setEditDialogOpen(open);
+    onEditDialogChange?.(open);
+  };
+
+  const { mutate: deletePokemon, isPending: isDeleting } = useMutation({
+    mutationFn: deletePokemonAction,
     onSuccess: (data) => {
       if (!data.success) {
-        toast.error(data.error || "Failed to delete photo");
+        toast.error(data.error || "Failed to delete Pokemon");
         return;
       }
-      toast.success(data.message || "Photo deleted successfully");
+      toast.success("Pokemon deleted successfully");
       router.refresh();
       setDeleteDialogOpen(false);
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to delete photo");
+      toast.error(error.message || "Failed to delete Pokemon");
     },
   });
 
   const handleDelete = () => {
-    deletePhoto(photo.id);
+    deletePokemon(pokemon.id);
   };
 
   return (
@@ -60,7 +71,7 @@ export default function PhotoActionButton({ photo }: { photo: Photo }) {
           <Button
             size={"icon-sm"}
             variant={"ghost"}
-            className="absolute top-2 right-2 z-50"
+            className="absolute top-2 right-2 z-10"
             onClick={(e) => e.stopPropagation()}
           >
             <Ellipsis />
@@ -87,10 +98,10 @@ export default function PhotoActionButton({ photo }: { photo: Photo }) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <EditPhotoDialog
-        photo={photo}
+      <EditPokemonDialog
+        pokemon={pokemon}
         open={editDialogOpen}
-        onOpenChange={setEditDialogOpen}
+        onOpenChange={handleEditDialogChange}
         onSuccess={() => router.refresh()}
       />
 
@@ -100,7 +111,7 @@ export default function PhotoActionButton({ photo }: { photo: Photo }) {
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This action cannot be undone. This will permanently delete the
-              photo "{photo.name}".
+              Pokemon "{pokemon.pokemon_name}" and all its reviews.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -118,3 +129,4 @@ export default function PhotoActionButton({ photo }: { photo: Photo }) {
     </>
   );
 }
+

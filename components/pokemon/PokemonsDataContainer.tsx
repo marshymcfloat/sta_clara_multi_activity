@@ -1,12 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import FoodListClient from "./FoodListClient";
+import PokemonListClient from "./PokemonListClient";
 import { Tables } from "@/types/supabase";
 
-type Review = Tables<"Review">;
+type Review = Tables<"PokemonReview">;
 
-export default async function FoodsDataContainer() {
+export default async function PokemonsDataContainer() {
   const supabase = await createClient(cookies());
 
   const {
@@ -18,40 +18,41 @@ export default async function FoodsDataContainer() {
     redirect("/");
   }
 
-  const { data: foods, error: foodsError } = await supabase
-    .from("Food")
+  const { data: pokemons, error: pokemonsError } = await supabase
+    .from("Pokemon")
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (foodsError) {
+  if (pokemonsError) {
     return (
       <div className="flex-1 flex justify-center items-center">
-        <h1 className="text-2xl font-bold">Error fetching foods</h1>
-        <p className="text-sm text-gray-500">{foodsError.message}</p>
+        <h1 className="text-2xl font-bold">Error fetching Pokemon</h1>
+        <p className="text-sm text-gray-500">{pokemonsError.message}</p>
       </div>
     );
   }
 
   const { data: reviews, error: reviewsError } = await supabase
-    .from("Review")
+    .from("PokemonReview")
     .select("*")
     .order("created_at", { ascending: false });
 
-  const reviewsByFoodId: Record<number, Review[]> = {};
+  const reviewsByPokemonId: Record<number, Review[]> = {};
   if (reviews) {
     reviews.forEach((review) => {
-      if (!reviewsByFoodId[review.food_id]) {
-        reviewsByFoodId[review.food_id] = [];
+      if (!reviewsByPokemonId[review.pokemon_id]) {
+        reviewsByPokemonId[review.pokemon_id] = [];
       }
-      reviewsByFoodId[review.food_id].push(review);
+      reviewsByPokemonId[review.pokemon_id].push(review);
     });
   }
 
   return (
-    <FoodListClient
-      foods={foods || []}
-      reviewsByFoodId={reviewsByFoodId}
+    <PokemonListClient
+      pokemons={pokemons || []}
+      reviewsByPokemonId={reviewsByPokemonId}
       currentUserId={user.id}
     />
   );
 }
+

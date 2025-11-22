@@ -86,6 +86,68 @@ export type Database = {
         }
         Relationships: []
       }
+      Pokemon: {
+        Row: {
+          created_at: string
+          created_by: string
+          id: number
+          pokemon_id: number
+          pokemon_image_url: string
+          pokemon_name: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          id?: number
+          pokemon_id: number
+          pokemon_image_url: string
+          pokemon_name: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          id?: number
+          pokemon_id?: number
+          pokemon_image_url?: string
+          pokemon_name?: string
+        }
+        Relationships: []
+      }
+      PokemonReview: {
+        Row: {
+          content: string
+          created_at: string
+          created_by: string | null
+          id: number
+          pokemon_id: number
+          rating: number | null
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          created_by?: string | null
+          id?: number
+          pokemon_id: number
+          rating?: number | null
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          created_by?: string | null
+          id?: number
+          pokemon_id?: number
+          rating?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "PokemonReview_pokemon_id_fkey"
+            columns: ["pokemon_id"]
+            isOneToOne: false
+            referencedRelation: "Pokemon"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       Profile: {
         Row: {
           created_at: string
